@@ -23,12 +23,24 @@ app.get('/', (req, res)=>{
     res.send('hello icy')
 })
 
+
+
 // to connect server to database
-const run = async()=>{
+async function run() {
     try{
         await client.connect();
 
         // users collection
+        const db = client.db('smart_db')
+        const productsCollection = db.collection('products')
+
+        app.post('/products', async(req, res)=>{
+            const newProduct = req.body
+            const result = await productsCollection.insertOne(newProduct)
+            res.send(result)
+        })
+
+
 
         await client.db('admin').command({ping : 1});
         console.log('ping you deployment');
