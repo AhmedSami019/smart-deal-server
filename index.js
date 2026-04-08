@@ -33,9 +33,10 @@ async function run() {
         // users collection
         const db = client.db('smart_db')
         const productsCollection = db.collection('products')
+        const bidsCollection = db.collection('bids')
 
         app.get('/products', async(req, res)=>{
-            const cursor = productsCollection.find()
+            const cursor = productsCollection.find().sort({price_min : -1})
             const result = await cursor.toArray()
             res.send(result)
         })
@@ -69,6 +70,14 @@ async function run() {
             const id = req.params.id
             const query = {_id : new ObjectId(id)}
             const result = await productsCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        
+        // bids related api
+        app.get('/bids', async(req, res)=>{
+            const cursor = bidsCollection.find()
+            const result = await cursor.toArray()
             res.send(result)
         })
 
