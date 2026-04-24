@@ -34,6 +34,21 @@ async function run() {
         const db = client.db('smart_db')
         const productsCollection = db.collection('products')
         const bidsCollection = db.collection('bids')
+        const usersCollection = db.collection('users')
+
+        
+        // all function for users
+        app.get('/users', async(req, res)=>{
+            const cursor = usersCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        app.post('/users', async(req, res)=>{
+            const newUser = req.body
+            const result = await usersCollection.insertOne(newUser)
+            res.send(result)
+        })
 
         app.get('/products', async(req, res)=>{
             const cursor = productsCollection.find().sort({price_min : -1})
