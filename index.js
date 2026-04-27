@@ -35,7 +35,7 @@ async function run() {
     const bidsCollection = db.collection("bids");
     const usersCollection = db.collection("users");
 
-    // all function for users
+    // all API's for users
     app.get("/users", async (req, res) => {
       const cursor = usersCollection.find();
       const result = await cursor.toArray();
@@ -56,11 +56,19 @@ async function run() {
       }
     });
 
+
+    // all API's for products
     app.get("/products", async (req, res) => {
       const cursor = productsCollection.find().sort({ price_min: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/latest-products', async(req, res)=>{
+      const cursor = productsCollection.find().sort({created_at: -1}).limit(6)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
 
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
