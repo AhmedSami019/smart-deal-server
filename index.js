@@ -58,7 +58,7 @@ async function run() {
 
 
     // all API's for products
-    app.get("/products", async (req, res) => {
+    app.get("/products", async(req, res) => {
       const cursor = productsCollection.find().sort({ price_min: -1 });
       const result = await cursor.toArray();
       res.send(result);
@@ -70,20 +70,20 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/products/:id", async (req, res) => {
+    app.get("/products/:id", async(req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
+      const query = { _id: id };
       const result = await productsCollection.findOne(query);
       res.send(result);
     });
 
-    app.post("/products", async (req, res) => {
+    app.post("/products", async(req, res) => {
       const newProduct = req.body;
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
     });
 
-    app.patch("/products/:id", async (req, res) => {
+    app.patch("/products/:id", async(req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updatedProducts = req.body;
