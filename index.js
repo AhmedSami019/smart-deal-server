@@ -103,7 +103,13 @@ async function run() {
 
     // bids related api
     app.get("/bids", async (req, res) => {
-      const cursor = bidsCollection.find();
+       const email = req.query.email
+      const query = {}
+
+      if(email){
+        query.buyer_email = email
+      }
+      const cursor = bidsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -118,7 +124,7 @@ async function run() {
     app.get('/product/bids/:productId', async(req, res)=>{
       const productId = req.params.productId
       const query = {product: productId}
-      const cursor = bidsCollection.find(query)
+      const cursor = bidsCollection.find(query).sort({bid_price: -1})
       const result = await cursor.toArray()
       res.send(result)
     })
