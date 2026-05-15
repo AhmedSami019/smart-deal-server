@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
@@ -10,7 +11,8 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 const uri =
-  "mongodb+srv://smartDBUser:rfGEkZTQkpDkmuRy@maincluster0.m4dyknx.mongodb.net/?appName=MainCluster0";
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@maincluster0.m4dyknx.mongodb.net/?appName=MainCluster0`;
+
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -132,6 +134,13 @@ async function run() {
     app.post('/bids', async(req, res)=>{
       const newBid = req.body
       const result = await bidsCollection.insertOne(newBid)
+      res.send(result)
+    })
+
+    app.delete('/bids/:id', async(req, res)=>{
+      const id = req.params.id
+      const query = {_id : new ObjectId(id)}
+      const result = await bidsCollection.deleteOne(query)
       res.send(result)
     })
 
