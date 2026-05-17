@@ -1,5 +1,6 @@
 const express = require("express");
 const admin = require("firebase-admin");
+const jwt = require('jsonwebtoken')
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -68,6 +69,14 @@ async function run() {
     const productsCollection = db.collection("products");
     const bidsCollection = db.collection("bids");
     const usersCollection = db.collection("users");
+
+     // token  related apis
+    app.post('/getToken', (req, res)=>{
+      const loggedUser = req.body
+      const token = jwt.sign(loggedUser, process.env.JWT_TOKEN, {expiresIn: '7d'})
+      res.send({token})
+    })
+
 
     // all API's for users
     app.get("/users", async (req, res) => {
