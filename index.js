@@ -161,7 +161,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/product/bids/:productId", async (req, res) => {
+    app.get("/product/bids/:productId", verifyFireBaseToken, async (req, res) => {
       const productId = req.params.productId;
       const query = { product: productId };
       const cursor = bidsCollection.find(query).sort({ bid_price: -1 });
