@@ -56,6 +56,7 @@ const verifyJWTtoken = async (req, res, next) => {
     if (err) {
       return res.status(401).send({ message: "unauthorize access" });
     }
+    req.token_email = decoded.email
     next();
   });
 };
@@ -170,6 +171,10 @@ async function run() {
       const query = {};
       if (email) {
         query.buyer_email = email;
+      }
+      // verify user has access to see the data
+      if(email !== req.token_email){
+        return res.status(403).send({message: "forbidden"})
       }
       const cursor = bidsCollection.find(query);
       const result = await cursor.toArray();
